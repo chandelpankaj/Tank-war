@@ -1,0 +1,9 @@
+@font-face{
+	font-family: clock-font;
+	src:url('../font/TickingTimebombBB_ital.ttf');
+}
+
+body{
+	margin-left:30px;
+	background:'grey';
+}
