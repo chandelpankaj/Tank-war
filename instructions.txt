@@ -1,0 +1,13 @@
+Works better with google chrome version 58.0 and above
+
+Instructions to play:
+Use 'w','a','s','d' or arrow keys to move
+Space to shoot bullets
+Enter key to pause/resume
+
+a/d OR left/right arrow keys to change level/speed
+Press esc any time to come back to main menu
+
+If the player is blocked, i,e head is blocked and is not possible to
+rotate in left/right direction then it can always move in backward
+direction.

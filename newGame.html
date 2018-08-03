@@ -4,11 +4,20 @@
 		<link rel="stylesheet" type="text/css" href="css/style.css">
 	</head>
 <body>
-<canvas id = 'my_canvas' width="580" height="575" style ="border:4px solid #000000">
-</canvas>
 
+	<button class="button" id="playbutton" onclick="mainPage();">Play</button>
+<div id="container">
+
+	<canvas id='background_canvas' style = "border:1px solid #000000"></canvas>
+	<div id="containerCenter">
+		<canvas  id = 'my_canvas' width="580" height="575" style ="border:4px solid #000000">
+		</canvas>
+	</div>
+</div>
 <script type ="text/javascript" src = "js/newGame.js">
 //#949B67 color code
 </script>
+<script type ="text/javascript" src = "js/background.js"></script>
+
 </body>
 </html>

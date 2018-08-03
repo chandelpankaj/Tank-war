@@ -1,4 +1,6 @@
 var ctx = document.getElementById('my_canvas').getContext('2d');
+var cup = new Image();
+cup.src = 'images/cup.jpg';
 var sounds = {blast:new Audio('audio/audioBlast.m4a'),
 			bullet:new Audio('audio/audioBullet.m4a'),
 			wall: new Audio('audio/brick.m4a'),
@@ -8,6 +10,7 @@ var sounds = {blast:new Audio('audio/audioBlast.m4a'),
 			levelChange:new Audio('audio/levelStart.m4a'),
 			enemy:new Audio('audio/audioEnemy.m4a')};
 var counter=0;
+var p_alpha=0;
 var animateInterval;
 const FPS = 50;
 const BOX_SIDE = 25;
@@ -25,6 +28,7 @@ var level=1;
 var speed = 1;
 var lives = 0;
 var pause = false;
+var pauseCounter = 0;
 var action;
 var goal = [completed=0,total=0];
 var button = {
@@ -175,7 +179,7 @@ createPlayer = function(p_level){
 	var p_bulletSpeed=46;
 	var p_speed=44;
 	var p_gap=20;
-	if(p_level==5){
+	if(p_level==5||p_level==4){
 		p_speed=45;
 	}
 	else if(p_level == 6||p_level==7){
@@ -191,7 +195,8 @@ createPlayer = function(p_level){
 	else if(p_level==9||p_level==10){
 		p_speed=48;
 		p_bulletSpeed=49;
-		p_gap=13;
+		if(p_level==10)
+			p_speed=49; p_gap=13;
 	}
 
 
@@ -313,7 +318,7 @@ dropCurtain = function(p_action){
 }
 getBackgroundImage = function(){
 	ctx.save();
-	ctx.fillStyle = 'rgba(150,150,150,0.15)';
+	ctx.fillStyle = 'rgba(220,220,220,1)';
 	ctx.fillRect(0,0,WIDTH,HEIGHT);
 	ctx.beginPath();
 	ctx.strokeStyle = 'black';
@@ -323,11 +328,11 @@ getBackgroundImage = function(){
 	ctx.closePath();
 	for(var x = BOARD_X; x <= PLAY_WIDTH+5*BOX_SIDE;x+=BOX_SIDE){
 		for(var y = BOARD_Y;y<=13*BOX_SIDE;y+=BOX_SIDE){
-			ctx.fillStyle = 'rgba(200,200,200,0.1)';
+			ctx.fillStyle = 'rgba(0,0,0,0.03)';
 			ctx.fillRect(x+2,y+2,BOX_SIDE-4,BOX_SIDE-4);
 			ctx.fillStyle = 'rgba(0,0,0,0.1)';
 			ctx.fillRect(x+BOX_SIDE/3.5, y+BOX_SIDE/3.5, BOX_SIDE/7*3, BOX_SIDE/7*3);
-			ctx.strokeStyle = 'rgba(200,200,2,0.2)';
+			ctx.strokeStyle = 'rgba(0,0,0,0.1)';
 			ctx.beginPath();
 			ctx.rect(x+2,y+2,BOX_SIDE-4,BOX_SIDE-4);
 			ctx.closePath();
@@ -336,11 +341,11 @@ getBackgroundImage = function(){
 	}
 		for(var x = 0;x<PLAY_WIDTH;x+=BOX_SIDE){
 			for(var y = 0;y<PLAY_HEIGHT;y+=BOX_SIDE){
-				ctx.fillStyle = 'rgba(200,200,200,0.1)';
+				ctx.fillStyle = 'rgba(0,0,0,0.03)';
 				ctx.fillRect(x+2,y+2,BOX_SIDE-4,BOX_SIDE-4);
 				ctx.fillStyle = 'rgba(0,0,0,0.1)';
 				ctx.fillRect(x+BOX_SIDE/3.5, y+BOX_SIDE/3.5, BOX_SIDE/7*3, BOX_SIDE/7*3);
-				ctx.strokeStyle = 'rgba(200,200,2,0.2)';
+				ctx.strokeStyle = 'rgba(0,0,0,0.1)';
 				ctx.beginPath();
 				ctx.rect(x+2,y+2,BOX_SIDE-4,BOX_SIDE-4);
 				ctx.closePath();
@@ -376,31 +381,31 @@ createEnemy = function(p_level){
 	var p_bulletSpeed = 42;
 	if(p_level < 2){
 		p_bulletSpeed = 42;
-		p_bulletGap = 450;
+		p_bulletGap = 400;
 	}
 	else if(p_level < 3){
 		p_bulletSpeed = 43;
-		p_bulletGap = 370;
+		p_bulletGap = 350;
 	}
 	else if(p_level < 5){
 		p_bulletSpeed = 44;
-		p_bulletGap = 290;
+		p_bulletGap = 250;
 	}
 	else if(p_level < 7){
 		p_bulletSpeed = 45;
-		p_bulletGap = 240;
+		p_bulletGap = 190;
 	}
 	else if(p_level < 8){
 		p_bulletSpeed = 46;
-		p_bulletGap = 180;
+		p_bulletGap = 150;
 	}
 	else if(p_level < 10){
 		p_bulletSpeed = 47;
-		p_bulletGap = 120;
+		p_bulletGap = 90;
 	}
 	else{
 		p_bulletSpeed = 48;
-		p_bulletGap = 70;
+		p_bulletGap = 50;
 	}
 	var pos = Math.abs(Math.floor(Math.random()*6-0.000001));
 	var p_dir = Math.abs(Math.floor(Math.random()*4-0.000001));
@@ -547,8 +552,44 @@ drawBackground = function(){
 	ctx.textAlign = 'left';
 	ctx.fillText('level    '+level,PLAY_WIDTH+2*BOX_SIDE, BOX_SIDE*16);
 	ctx.fillText('speed   '+speed,PLAY_WIDTH+2*BOX_SIDE, BOX_SIDE*17+BOX_SIDE/2);
+
+	ctx.globalAlpha=0.14;
+	ctx.drawImage(cup,PLAY_WIDTH+BOX_SIDE*3.1, HEIGHT-4.5*BOX_SIDE, BOX_SIDE*2, BOX_SIDE*2);
+	ctx.fillStyle ='black';
+	ctx.textAlign='center';
+	ctx.fillText('pause',p_center,BOX_SIDE*22);
+
+
 	ctx.restore();
 
+}
+displayPause = function(){
+	var p_center = Math.floor(WIDTH/2 +PLAY_WIDTH/2);
+	p_alpha = Math.round(p_alpha*100)/100;
+	if(pauseCounter%3==0){
+		p_alpha+=0.1;
+		if(p_alpha<=1)
+			pause_alpha=p_alpha;
+		else{
+			if(p_alpha>=2){
+				p_alpha=0;
+				pause_alpha=0;
+			}
+			else
+			pause_alpha = 2-p_alpha;
+		}
+	}
+	ctx.save();
+	ctx.clearRect(PLAY_WIDTH+BOX_SIDE*2, HEIGHT-4.5*BOX_SIDE, BOX_SIDE*4, BOX_SIDE*4);
+	ctx.fillStyle = 'rgba(220,220,220,1)';
+	ctx.fillRect(PLAY_WIDTH+BOX_SIDE*2, HEIGHT-4.5*BOX_SIDE, BOX_SIDE*4, BOX_SIDE*4+1)
+	ctx.font = "30px clock-font";
+	ctx.globalAlpha=pause_alpha;
+	ctx.drawImage(cup,PLAY_WIDTH+BOX_SIDE*3.1, HEIGHT-4.5*BOX_SIDE, BOX_SIDE*2, BOX_SIDE*2);
+	ctx.fillStyle ='black';
+	ctx.textAlign='center';
+	ctx.fillText('pause',p_center,BOX_SIDE*22);
+	ctx.restore();
 }
 checkHeadLockStatus = function(bx,by,x,y){
 	if((bx==x+BOX_SIDE &&(by==y||by==y+2*BOX_SIDE))||((bx==x||bx==x+2*BOX_SIDE)&&by==y+BOX_SIDE))
@@ -797,7 +838,7 @@ possibleToMove = function(bot, direction){
 }
 function drawBox(x,y){
 	ctx.beginPath();
-		ctx.fillStyle = 'rgba(200,200,200,0.8)';
+		ctx.fillStyle = 'rgba(0,0,0,0.06)';
 
 		ctx.fillRect(x+2,y+2,BOX_SIDE-4,BOX_SIDE-4);
 		ctx.fillStyle = 'black';
@@ -1225,7 +1266,7 @@ updateVariables = function(){
 				//here do something to reduce the hp of player
 				lives--;
 				player.pause  = true;
-				if(lives==0){
+				if(lives<=0){
 					sounds.ending.currentTime=0
 					sounds.ending.play();
 					action='homePage';
@@ -1337,7 +1378,7 @@ updateVariables = function(){
 		}
 	}
 
-	if(enemyCount < goal.total-goal.completed&&sounds.levelChange.ended)
+	if(enemyCount < goal.total-goal.completed)
 	if(enemyCount<6 && counter%500==0)
 		createEnemy(speed);
 	else if(enemyCount < 5 && counter%50==0)
@@ -1370,13 +1411,23 @@ function applyAction(p_action){
 	}
 }
 update = function(){
-	if(!sounds.levelChange.ended)
-	if(Math.abs(sounds.levelChange.currentTime-5.13)<0.01){
-		sounds.levelChange.currentTime =6;
+	if(!sounds.levelChange.ended){
+		pause = false;
+		if(Math.abs(sounds.levelChange.currentTime-5.13)<0.01){
+			sounds.levelChange.currentTime =6;
+		}
 	}
+	if(!pause){
 	counter++;
 	updateVariables();
 	drawEverything();
+	if(pauseCounter)
+		pauseCounter = 0;
+	}
+	else{
+		displayPause();
+		pauseCounter++;
+	}
 }
 document.addEventListener('keydown',function(event){
 	//65 A, 37-left, 83-s 40-down, 68-d, 96-right, 87-w, 38-up
@@ -1407,6 +1458,7 @@ document.addEventListener('keydown',function(event){
 		break;
 		case 13:
 			button.enter.pressed = true;
+			pause = !pause;
 			break;
 		case 27:
 			button.esc.pressed = true;
@@ -1654,8 +1706,15 @@ startGame = function(type,p_level,p_speed){
 	animateInterval = setInterval(update,1000/FPS);
 }
 mainPage = function(){
+	var elem = document.getElementById('playbutton');
+    if(elem != null)
+    	elem.parentNode.removeChild(elem);
 	counter = 0;
 	score =0;
+	level=1;
+	speed=1;
+	goal.completed=0;
+	goal.total=0;
 	delete(player);
 	enemyList={};
 	for(p_row in brickList){
@@ -1664,7 +1723,8 @@ mainPage = function(){
 		}
 	}
 	animateInterval = setInterval(mainPageUpdate,1000/FPS);
-}
+
 	sounds.starting.currentTime = 0;
 	sounds.starting.play();
-mainPage();
+}
+//mainPage();
