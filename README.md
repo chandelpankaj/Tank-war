@@ -10,10 +10,11 @@ Game can be paused/resumed using enter key.
 Home page of the game where you can change level and/or speed.
 Use 'W' to change levels and 'D' to change speed.
 
-![screenshot](Screenshots/Screenshot1.png)
+<img src="Screenshots/Screenshot1.png" alt="screenshot" width="50%" height="50%">
 
 You can move your tank using w,a,s,d keys and fire bullets using space.
 
-![screenshot](Screenshots/Screenshot2.png)
+<img src="Screenshots/Screenshot2.png" alt="screenshot" width="50%" height="50%">
 
-![screenshot](Screenshots/Screenshot3.png)
+
+<img src="Screenshots/Screenshot3.png" alt="screenshot" width="50%" height="50%">
