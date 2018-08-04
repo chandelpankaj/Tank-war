@@ -1,14 +1,19 @@
 # Tanks_Brick_Game
-An open source 2D game in which the player is the controller of a fighting tank, traversing
-in all directions to collect maximum points while shooting the enemy tanks.
+The game is written in javaScript. The player controls a tank and can shoot the bullets and move in different directions.
+Enemy tanks also shoots bullet while moving. Avoid being hit by enemy bullets.
 
-Game can be played using 'W', 'S', 'A', 'D'.
+The player starts with 4 lives. The game end when all the lives are lost.
+
+Game can be played using 'W', 'S', 'A', 'D' and 'space'.
 Goal and score is given in right side panel.
-Goal has to be completed to move next level.
+Each level has a specified goal denoting number of enemies player must kill to proceed to the next level.
+
+With the increasing levels, the difficulty increases, enemies moves faster and also shoots faster.
+
 Game can be paused/resumed using enter key.
 
 Home page of the game where you can change level and/or speed.
-Use 'W' to change levels and 'D' to change speed.
+Use 'W' to change level and 'D' to change speed.
 
 <img src="Screenshots/Screenshot1.png" alt="screenshot" width="50%" height="50%">
 
