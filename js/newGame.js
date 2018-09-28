@@ -32,13 +32,13 @@ var pauseCounter = 0;
 var action;
 var goal = [completed=0,total=0];
 var button = {
-	left:[{'pressed':false},{'pressedTime':0},{'releaseTime':0}],
-	right:[{'pressed':false},{'pressedTime':0},{'releaseTime':0}],
-	up:[{'pressed':false},{'pressedTime':0}],
-	down:[{'pressed':false},{'pressedTime':0}],
-	space:[{'pressed':false}],
-	enter:[{'enter':false}],
-	esc:[{'esc':false}]
+	left:{'pressed':false, 'pressedTime':0, 'releaseTime':0},
+	right:{'pressed':false, 'pressedTime':0, 'releaseTime':0},
+	up:{'pressed':false, 'pressedTime':0},
+	down:{'pressed':false ,'pressedTime':0},
+	space:{'pressed':false},
+	enter:{'enter':false},
+	esc:{'esc':false}
 };
 var enemyList = [];
 var brickList = create2DArray(23);
@@ -836,12 +836,14 @@ possibleToMove = function(bot, direction){
 	return true;
 
 }
-function drawBox(x,y){
+function drawBox(x,y, r=0, g=0, b=0){
 	ctx.beginPath();
-		ctx.fillStyle = 'rgba(0,0,0,0.06)';
-
+		//ctx.fillStyle = 'rgba(0,0,0,0.06)';
+		ctx.fillStyle = 'rgba('+r+','+g+','+b+',0.06)';
 		ctx.fillRect(x+2,y+2,BOX_SIDE-4,BOX_SIDE-4);
-		ctx.fillStyle = 'black';
+		//.fillStyle = 'black';
+
+		ctx.fillStyle = 'rgba('+r+','+g+','+b+',1)';
 		ctx.fillRect(x+BOX_SIDE/3.5, y+BOX_SIDE/3.5, BOX_SIDE/7*3, BOX_SIDE/7*3);
 		ctx.rect(x+2,y+2,BOX_SIDE-4,BOX_SIDE-4);
 		ctx.stroke();
@@ -851,6 +853,11 @@ function box(x,y){
 	this.render = function(){
 		ctx.save();
 		drawBox(this.x, this.y);
+		ctx.restore();
+	}
+	this.render = function(r, g, b){
+		ctx.save();
+		drawBox(this.x, this.y, r, g, b);
 		ctx.restore();
 	}
 }
@@ -927,7 +934,12 @@ function bot(x,y,dir,type,speed,bulletSpeed,bulletGap){
 	}
 	this.render = function(){
 		for(var b in this.box){
-			this.box[b].render();
+			if(this.type == 'player'){
+				this.box[b].render(0,60,160);
+			}
+			else{
+				this.box[b].render();
+			}
 		}
 		for(var b in this.bulletList){
 			this.bulletList[b].bulet.render();
